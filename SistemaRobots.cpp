@@ -883,10 +883,6 @@ void consultaSenal(senal &sen){
         return;
     }
     
-    cout << "\nRobot: " << rob.nombre << endl;
-    cout << "Modelo: " << rob.modelo << endl;
-    cout << "-----------------------------------\n";
-    
     archSen.open("senales.bin", ios::in | ios::binary);
     if(!archSen){
         cout << "No hay senales registradas\n";
@@ -898,6 +894,12 @@ void consultaSenal(senal &sen){
         archSen.read((char *)&sen, sizeof(sen));
         if(sen.idRobot == id){
             contador++;
+            system("cls");
+            cout << "CONSULTA DE SENALES DE UN ROBOT\n";
+            cout << "================================\n\n";
+            cout << "Robot: " << rob.nombre << endl;
+            cout << "Modelo: " << rob.modelo << endl;
+            cout << "-----------------------------------\n";
             cout << "\nSenal " << contador << ":\n";
             imprimir(sen);
         }
