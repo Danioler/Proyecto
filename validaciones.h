@@ -1,27 +1,27 @@
 #ifndef VALIDACIONES_H
 #define VALIDACIONES_H
 
-using namespace std;
+#include <iostream>
 
 int validarEntero(void){
     int numero;
-    while(!(cin >> numero)){
-        cin.clear();
-        cin.ignore(100, '\n');
-        cout << "Intente de nuevo: ";
+    while(!(std::cin >> numero)){
+        std::cin.clear();
+        std::cin.ignore(100, '\n');
+        std::cout << "Debe ingresar un numero entero. Intente de nuevo: ";
     }
-    cin.ignore();
+    std::cin.ignore();
     return numero;
 }
 
 float validarFlotante(void){
     float numero;
-    while(!(cin >> numero)){
-        cin.clear();
-        cin.ignore(100, '\n');
-        cout << "Intente de nuevo: ";
+    while(!(std::cin >> numero)){
+        std::cin.clear();
+        std::cin.ignore(100, '\n');
+        std::cout << "Debe ingresar un numero flotante. Intente de nuevo: ";
     }
-    cin.ignore();
+    std::cin.ignore();
     return numero;
 }
 
