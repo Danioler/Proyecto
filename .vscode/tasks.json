@@ -10,7 +10,6 @@
                 "-Wextra",
                 "-g3",
                 "${workspaceFolder}\\SistemaRobots.cpp",
-                "${workspaceFolder}\\validaciones.cpp",
                 "-o",
                 "${workspaceFolder}\\output\\SistemaRobots.exe"
             ],
@@ -19,7 +18,7 @@
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"],
-            "detail": "Compila SistemaRobots.cpp con validaciones.cpp"
+            "detail": "Compila SistemaRobots.cpp"
         },
         {
             "label": "Compilar y Ejecutar",
@@ -30,7 +29,6 @@
                 "-Wextra",
                 "-g3",
                 "${workspaceFolder}\\SistemaRobots.cpp",
-                "${workspaceFolder}\\validaciones.cpp",
                 "-o",
                 "${workspaceFolder}\\output\\SistemaRobots.exe",
                 "&&",
