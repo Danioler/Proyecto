@@ -1038,11 +1038,15 @@ void imprimir(senal &sen){
 void reporteRobots(void){
     system("cls");
     ifstream archivo;
+    ofstream arch_txt("reportes.txt", ios::app);
     robot rob;
     int activos = 0, inactivos = 0;
     
     cout << "REPORTE DE ROBOTS\n";
     cout << "=================\n\n";
+    
+    arch_txt << "REPORTE DE ROBOTS\n";
+    arch_txt << "=================\n";
     
     archivo.open("robots.bin", ios::in | ios::binary);
     if(!archivo){
@@ -1063,18 +1067,28 @@ void reporteRobots(void){
     cout << "Robots inactivos: " << inactivos << "\n";
     cout << "Porcentaje activos: " << (activos > 0 ? (activos * 100 / (activos + inactivos)) : 0) << "%\n";
     
+    arch_txt << "Total de robots registrados: " << (activos + inactivos) << "\n";
+    arch_txt << "Robots activos: " << activos << "\n";
+    arch_txt << "Robots inactivos: " << inactivos << "\n";
+    arch_txt << "Porcentaje activos: " << (activos > 0 ? (activos * 100 / (activos + inactivos)) : 0) << "%\n\n";
+    
     archivo.close();
+    arch_txt.close();
     system("pause");
 }
 
 void reporteSenales(void){
     system("cls");
     ifstream archivo;
+    ofstream arch_txt("reportes.txt", ios::app);
     senal sen;
     int normal = 0, aviso = 0, critico = 0;
     
     cout << "REPORTE DE SENALES\n";
     cout << "==================\n\n";
+    
+    arch_txt << "REPORTE DE SENALES\n";
+    arch_txt << "==================\n";
     
     archivo.open("senales.bin", ios::in | ios::binary);
     if(!archivo){
@@ -1094,19 +1108,29 @@ void reporteSenales(void){
     cout << "Senales en aviso: " << aviso << "\n";
     cout << "Senales criticas: " << critico << "\n";
     
+    arch_txt << "Total de senales registradas: " << (normal + aviso + critico) << "\n";
+    arch_txt << "Senales normales: " << normal << "\n";
+    arch_txt << "Senales en aviso: " << aviso << "\n";
+    arch_txt << "Senales criticas: " << critico << "\n\n";
+    
     archivo.close();
+    arch_txt.close();
     system("pause");
 }
 
 void reporteEstadistico(void){
     system("cls");
     ifstream archivo;
+    ofstream arch_txt("reportes.txt", ios::app);
     robot rob;
     float voltajePromedio = 0, tempPromedio = 0, velPromedio = 0;
     int contador = 0;
     
     cout << "REPORTE ESTADISTICO\n";
     cout << "===================\n\n";
+    
+    arch_txt << "REPORTE ESTADISTICO\n";
+    arch_txt << "===================\n";
     
     archivo.open("robots.bin", ios::in | ios::binary);
     if(!archivo){
@@ -1129,10 +1153,17 @@ void reporteEstadistico(void){
         cout << "Promedio de temperatura maxima: " << (tempPromedio / contador) << " C\n";
         cout << "Promedio de velocidad maxima: " << (velPromedio / contador) << " km/h\n";
         cout << "Cantidad de robots analizados: " << contador << "\n";
+        
+        arch_txt << "Promedio de voltaje nominal: " << (voltajePromedio / contador) << " V\n";
+        arch_txt << "Promedio de temperatura maxima: " << (tempPromedio / contador) << " C\n";
+        arch_txt << "Promedio de velocidad maxima: " << (velPromedio / contador) << " km/h\n";
+        arch_txt << "Cantidad de robots analizados: " << contador << "\n\n";
     } else {
         cout << "No hay robots activos para analizar\n";
+        arch_txt << "No hay robots activos para analizar\n\n";
     }
     
     archivo.close();
+    arch_txt.close();
     system("pause");
 }
