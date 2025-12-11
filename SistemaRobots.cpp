@@ -44,6 +44,9 @@ void consultaVelocidad();
 void registrarSenal(senal &sen);
 void consultaSenal(senal &sen);
 void generarDiagnostico(void);
+void reporteRobots(void);
+void reporteSenales(void);
+void reporteEstadistico(void);
 void imprimir(robot &rob);
 void imprimir(senal &sen);
 
@@ -110,10 +113,32 @@ int main(){
                         }
                     } while(op!=4);
                     break;
-            case 6: break;
+            case 6:
+                    do{
+                        cout << "\n----------  MENU REPORTES  -----------\n";
+                        cout << "Reporte de robots .......... 1\n";
+                        cout << "Reporte de senales ......... 2\n";
+                        cout << "Reporte estadistico ........ 3\n";
+                        cout << "Salir de reportes .......... 4\n";
+                        cout << "Selecciona: ";
+                        cin >> op;
+                        cin.ignore();
+                        switch(op){
+                            case 1: reporteRobots();
+                                    break;
+                            case 2: reporteSenales();
+                                    break;
+                            case 3: reporteEstadistico();
+                                    break;
+                            case 4: break;
+                            default: cout << "Error en la opcion\n";
+                        }
+                    } while(op!=4);
+                    break;
+            case 7: break;
             default: cout << "Error en la opcion\n";
         }
-    } while(op!=6);
+    } while(op!=7);
 
     grabarId(id);
 
@@ -689,7 +714,8 @@ int menu(void){
     cout << "Modificar robot (CAMBIOS) ...... 3\n";
     cout << "Consultar robots ............... 4\n";
     cout << "Gestion de senales ............. 5\n";
-    cout << "Salir ........................... 6\n";
+    cout << "Reportes estadisticos .......... 6\n";
+    cout << "Salir ........................... 7\n";
     cout << "Selecciona: ";
     cin >> op;
     cin.ignore();
@@ -1009,3 +1035,104 @@ void imprimir(senal &sen){
     cout << "  Valor: " << sen.valor << endl;
     cout << "  Estado: " << (sen.estado == 0 ? "Normal" : sen.estado == 1 ? "Aviso" : "Critico") << endl;
 } // fin de imprimir senal
+void reporteRobots(void){
+    system("cls");
+    ifstream archivo;
+    robot rob;
+    int activos = 0, inactivos = 0;
+    
+    cout << "REPORTE DE ROBOTS\n";
+    cout << "=================\n\n";
+    
+    archivo.open("robots.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "No hay datos de robots\n";
+        system("pause");
+        return;
+    }
+    
+    while(archivo.read((char *)&rob, sizeof(rob))){
+        if(rob.id != 0){
+            if(rob.estatus == 1) activos++;
+            else inactivos++;
+        }
+    }
+    
+    cout << "Total de robots registrados: " << (activos + inactivos) << "\n";
+    cout << "Robots activos: " << activos << "\n";
+    cout << "Robots inactivos: " << inactivos << "\n";
+    cout << "Porcentaje activos: " << (activos > 0 ? (activos * 100 / (activos + inactivos)) : 0) << "%\n";
+    
+    archivo.close();
+    system("pause");
+}
+
+void reporteSenales(void){
+    system("cls");
+    ifstream archivo;
+    senal sen;
+    int normal = 0, aviso = 0, critico = 0;
+    
+    cout << "REPORTE DE SENALES\n";
+    cout << "==================\n\n";
+    
+    archivo.open("senales.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "No hay datos de senales\n";
+        system("pause");
+        return;
+    }
+    
+    while(archivo.read((char *)&sen, sizeof(sen))){
+        if(sen.estado == 0) normal++;
+        else if(sen.estado == 1) aviso++;
+        else if(sen.estado == 2) critico++;
+    }
+    
+    cout << "Total de senales registradas: " << (normal + aviso + critico) << "\n";
+    cout << "Senales normales: " << normal << "\n";
+    cout << "Senales en aviso: " << aviso << "\n";
+    cout << "Senales criticas: " << critico << "\n";
+    
+    archivo.close();
+    system("pause");
+}
+
+void reporteEstadistico(void){
+    system("cls");
+    ifstream archivo;
+    robot rob;
+    float voltajePromedio = 0, tempPromedio = 0, velPromedio = 0;
+    int contador = 0;
+    
+    cout << "REPORTE ESTADISTICO\n";
+    cout << "===================\n\n";
+    
+    archivo.open("robots.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "No hay datos\n";
+        system("pause");
+        return;
+    }
+    
+    while(archivo.read((char *)&rob, sizeof(rob))){
+        if(rob.id != 0 && rob.estatus == 1){
+            voltajePromedio += rob.voltaje_nominal;
+            tempPromedio += rob.temperatura_max;
+            velPromedio += rob.velocidad_max;
+            contador++;
+        }
+    }
+    
+    if(contador > 0){
+        cout << "Promedio de voltaje nominal: " << (voltajePromedio / contador) << " V\n";
+        cout << "Promedio de temperatura maxima: " << (tempPromedio / contador) << " C\n";
+        cout << "Promedio de velocidad maxima: " << (velPromedio / contador) << " km/h\n";
+        cout << "Cantidad de robots analizados: " << contador << "\n";
+    } else {
+        cout << "No hay robots activos para analizar\n";
+    }
+    
+    archivo.close();
+    system("pause");
+}
