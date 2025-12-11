@@ -157,8 +157,7 @@ void cambios(robot &rob){
     arch.open("robots.bin", ios::in | ios::out | ios::binary);
     if(arch){   
         cout << "Dame tu id: ";
-        cin >> id;
-        cin.ignore();
+        id = validarEntero();
         
         arch.seekg((id-1)*sizeof(robot), ios::beg);
         if(!arch.read((char *)&rob, sizeof(rob))){
