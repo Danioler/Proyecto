@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar Sistema Robots",
+            "type": "shell",
+            "command": "D:\\codeblock\\bin\\g++.EXE",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "${workspaceFolder}\\SistemaRobots.cpp",
+                "${workspaceFolder}\\validaciones.cpp",
+                "-o",
+                "${workspaceFolder}\\output\\SistemaRobots.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compila SistemaRobots.cpp con validaciones.cpp"
+        },
+        {
+            "label": "Compilar y Ejecutar",
+            "type": "shell",
+            "command": "D:\\codeblock\\bin\\g++.EXE",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "${workspaceFolder}\\SistemaRobots.cpp",
+                "${workspaceFolder}\\validaciones.cpp",
+                "-o",
+                "${workspaceFolder}\\output\\SistemaRobots.exe",
+                "&&",
+                "${workspaceFolder}\\output\\SistemaRobots.exe"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Compila y ejecuta SistemaRobots"
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+DIAGNOSTICO DE ROBOTS
+====================
+
+PROBLEMA 1:
+Robot: Erik (ID: 1)
+Tipo: Temperatura elevada
+Valor detectado: 330
+Temperatura maxima: 22.000000 C
+Severidad: CRITICA
+---
+
+PROBLEMA 2:
+Robot: Erik (ID: 1)
+Tipo: Velocidad excedida
+Valor detectado: 34
+Velocidad minima: 0 km/h | Velocidad maxima: 10.000000 km/h
+Severidad: CRITICA
+---
+
+
+TOTAL DE PROBLEMAS: 2
