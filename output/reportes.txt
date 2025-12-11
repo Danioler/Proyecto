@@ -1,0 +1,21 @@
+REPORTE DE ROBOTS
+=================
+Total de robots registrados: 1
+Robots activos: 1
+Robots inactivos: 0
+Porcentaje activos: 100%
+
+REPORTE DE SENALES
+==================
+Total de senales registradas: 1
+Senales normales: 0
+Senales en aviso: 0
+Senales criticas: 1
+
+REPORTE ESTADISTICO
+===================
+Promedio de voltaje nominal: 220 V
+Promedio de temperatura maxima: 30 C
+Promedio de velocidad maxima: 50 km/h
+Cantidad de robots analizados: 1
+
