@@ -5,15 +5,15 @@
 using namespace std;
 
 struct robot { 
-    int id;
-    char nombre[20];
+    int id; // Identificador unico
+    char nombre[20]; 
     char modelo[20];
     char fabricante[20];
     int anio_fabricacion;
     float voltaje_nominal;
     float temperatura_max;
     float velocidad_max;
-    int estatus;
+    int estatus; // 1 - activo, 0 - inactivo
 };
 
 struct senal { 
@@ -84,13 +84,13 @@ int main(){
                                     break;
                             case 5: consultaVoltaje();           // Problemas de voltaje
                                     break;
-                            case 6: consultaTemperatura();       // Problemas de temperatura
+                            case 6: consultaTemperatura();       
                                     break;
-                            case 7: consultaFabricante();        // Por fabricante
+                            case 7: consultaFabricante();       
                                     break;
-                            case 8: consultaVelocidad();         // Problemas de velocidad
+                            case 8: consultaVelocidad();         
                                     break;
-                            case 9: break;                       // Salir de consultas
+                            case 9: break;                       
                             default: cout << "Error en la opcion\n";
                         }
                     } while(op!=9);
@@ -169,7 +169,7 @@ void cambios(robot &rob){
             arch.seekp((id-1)*sizeof(robot), ios::beg);
             arch.write((char *)&rob, sizeof(rob));
             arch.flush();
-            cout << "\n*** CAMBIO REALIZADO CON EXITO ***\n";
+            cout << "\n***CAMBIO REALIZADO CON EXITO*** \n";
             system("pause");
         }
         else {
