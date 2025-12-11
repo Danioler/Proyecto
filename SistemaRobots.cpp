@@ -77,15 +77,17 @@ int main(){
                     do{
                         op=menuConsultas();
                         switch(op){
-                            case 1: consultaTodos(rob);           // Ver todos
+                            case 1: consultaTodos(rob);          
                                     break;
-                            case 2: consultaUno(rob);            // Por ID
+                            case 2: consultaUno(rob);       
                                     break;
-                            case 3: consultaEstatus(rob);        // Por estatus
+                            case 3: consultaEstatus(rob);        
+                            
                                     break;
-                            case 4: consultaRangoEdad(rob);      // Por rango de años
+                            case 4: consultaRangoEdad(rob);      
+                            
                                     break;
-                            case 5: consultaVoltaje();           // Problemas de voltaje
+                            case 5: consultaVoltaje();          
                                     break;
                             case 6: consultaTemperatura();       
                                     break;
@@ -190,9 +192,7 @@ void cambios(robot &rob){
             rob.anio_fabricacion = validarEntero();
             cout << "\n(Voltaje, temperatura y velocidad no se modifican)\n";
             
-            arch.seekp((id-1)*sizeof(robot), ios::beg);
             arch.write((char *)&rob, sizeof(rob));
-            arch.flush();
             cout << "\n***CAMBIO REALIZADO CON EXITO*** \n";
             system("pause");
         }
@@ -201,7 +201,10 @@ void cambios(robot &rob){
             system("pause");
         }
     }
-    else cout << "Error en el archivo\n";
+    else {
+        cout << "Error en el archivo\n";
+        arch.close();
+    }
 
     arch.close();
 } // fin cambios
@@ -254,7 +257,10 @@ void consultaUno(robot &rob){
         system("cls");
         imprimir(rob);
     }
-    else cout << "Error en el archivo\n";
+    else {
+        cout << "Error en el archivo\n";
+        arch.close();
+    }
 
     arch.close();
 } //fin de consultaUno
@@ -307,9 +313,7 @@ void bajas(robot &rob){
     
     if(res == "s"){
         rob.estatus=0;
-        arch.seekp((id-1)*sizeof(robot), ios::beg);
         arch.write((char *)&rob, sizeof(rob));
-        arch.flush(); 
         cout << "\n*** BAJA EXITOSA ***\n";
         cout << "El robot " << rob.nombre << " ha sido desactivado\n";
         system("pause");
@@ -348,7 +352,11 @@ void consultaEstatus(robot &rob){
         }
         system("pause");
     }
-    else cout << "Error en el archivo";
+    else {
+        cout << "Error en el archivo";
+        system("pause");
+        arch.close();
+    }
 } // fin de consulta estatus
 
 void consultaRangoEdad(robot &rob){
@@ -391,7 +399,11 @@ void consultaRangoEdad(robot &rob){
         }
         system("pause");
     }
-    else cout << "Error en el archivo";
+    else {
+        cout << "Error en el archivo";
+        system("pause");
+        arch.close();
+    }
 } // fin de consulta rango edad
 
 void consultaTodos(robot &rob){
@@ -406,7 +418,11 @@ void consultaTodos(robot &rob){
         }
         cout << "\nFin del archivo\n";
     }
-    else cout << "Error en el archivo";
+    else {
+        cout << "Error en el archivo";
+        system("pause");
+        arch.close();
+    }
 } // fin de consulta todos
 
 void consultaVoltaje(){
@@ -616,29 +632,19 @@ void imprimir(robot &rob){
 
 void alta(robot &rob){
     fstream arch;
-    cout << "Intentando guardar en: robots.bin\n";
     
-    // Abrir en modo lectura/escritura, crear si no existe
     arch.open("robots.bin", ios::in | ios::out | ios::binary);
     if(!arch){
-        // Si no existe, crearlo
-        arch.clear();
-        arch.open("robots.bin", ios::out | ios::binary);
-        arch.close();
-        arch.open("robots.bin", ios::in | ios::out | ios::binary);
+        cout << "ERROR: Archivo robots.bin no encontrado\n";
+        system("pause");
+        return;
     }
-    
-    if(arch){
+    else{
         // Escribir en la posición correspondiente al ID
         arch.seekp((rob.id-1)*sizeof(robot), ios::beg);
         arch.write((char *)&rob, sizeof(rob));
-        arch.flush(); // Forzar escritura
         cout << "\n*** EXITO ***\n";
         cout << "Robot '" << rob.nombre << "' registrado con ID: " << rob.id << "\n";
-        cout << "Posicion en archivo: " << (rob.id-1)*sizeof(robot) << "\n";
-    }
-    else {
-        cout << "ERROR: No se pudo crear/abrir el archivo robots.bin\n";
     }
 
     arch.close();
@@ -688,17 +694,12 @@ int obtenerId(void){
     arch.open("controlId_Robots.txt", ios::in);
     if(arch){
         arch >> id;
+        arch.close();
     }
     else{
-        // Si no existe el archivo, crear uno con ID inicial
-        ofstream archOut;
-        archOut.open("controlId_Robots.txt", ios::out);
-        if(archOut){
-            archOut << 1;
-            archOut.close();
-        }
+        cout << "Error al abrir el archivo\n";
+        arch.close();
     }
-    arch.close();
 
     return id;
 } // fin de obtenerId
@@ -882,10 +883,6 @@ void consultaSenal(senal &sen){
         return;
     }
     
-    cout << "\nRobot: " << rob.nombre << endl;
-    cout << "Modelo: " << rob.modelo << endl;
-    cout << "-----------------------------------\n";
-    
     archSen.open("senales.bin", ios::in | ios::binary);
     if(!archSen){
         cout << "No hay senales registradas\n";
@@ -897,6 +894,12 @@ void consultaSenal(senal &sen){
         archSen.read((char *)&sen, sizeof(sen));
         if(sen.idRobot == id){
             contador++;
+            system("cls");
+            cout << "CONSULTA DE SENALES DE UN ROBOT\n";
+            cout << "================================\n\n";
+            cout << "Robot: " << rob.nombre << endl;
+            cout << "Modelo: " << rob.modelo << endl;
+            cout << "-----------------------------------\n";
             cout << "\nSenal " << contador << ":\n";
             imprimir(sen);
         }
@@ -1037,22 +1040,29 @@ void imprimir(senal &sen){
 void reporteRobots(void){
     system("cls");
     ifstream archivo;
-    ofstream arch_txt("reportes.txt", ios::app);
     robot rob;
     int activos = 0, inactivos = 0;
+    
+    archivo.open("robots.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "ERROR: Archivo robots.bin no encontrado\n";
+        system("pause");
+        return;
+    }
+    
+    ofstream arch_txt("reportes.txt", ios::app);
+    if(!arch_txt){
+        cout << "ERROR: No se puede crear archivo reportes.txt\n";
+        system("pause");
+        archivo.close();
+        return;
+    }
     
     cout << "REPORTE DE ROBOTS\n";
     cout << "=================\n\n";
     
     arch_txt << "REPORTE DE ROBOTS\n";
     arch_txt << "=================\n";
-    
-    archivo.open("robots.bin", ios::in | ios::binary);
-    if(!archivo){
-        cout << "No hay datos de robots\n";
-        system("pause");
-        return;
-    }
     
     while(archivo.read((char *)&rob, sizeof(rob))){
         if(rob.id != 0){
@@ -1079,22 +1089,29 @@ void reporteRobots(void){
 void reporteSenales(void){
     system("cls");
     ifstream archivo;
-    ofstream arch_txt("reportes.txt", ios::app);
     senal sen;
     int normal = 0, aviso = 0, critico = 0;
+    
+    archivo.open("senales.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "ERROR: Archivo senales.bin no encontrado\n";
+        system("pause");
+        return;
+    }
+    
+    ofstream arch_txt("reportes.txt", ios::app);
+    if(!arch_txt){
+        cout << "ERROR: No se puede crear archivo reportes.txt\n";
+        system("pause");
+        archivo.close();
+        return;
+    }
     
     cout << "REPORTE DE SENALES\n";
     cout << "==================\n\n";
     
     arch_txt << "REPORTE DE SENALES\n";
     arch_txt << "==================\n";
-    
-    archivo.open("senales.bin", ios::in | ios::binary);
-    if(!archivo){
-        cout << "No hay datos de senales\n";
-        system("pause");
-        return;
-    }
     
     while(archivo.read((char *)&sen, sizeof(sen))){
         if(sen.estado == 0) normal++;
@@ -1120,23 +1137,30 @@ void reporteSenales(void){
 void reporteEstadistico(void){
     system("cls");
     ifstream archivo;
-    ofstream arch_txt("reportes.txt", ios::app);
     robot rob;
     float voltajePromedio = 0, tempPromedio = 0, velPromedio = 0;
     int contador = 0;
+    
+    archivo.open("robots.bin", ios::in | ios::binary);
+    if(!archivo){
+        cout << "ERROR: Archivo robots.bin no encontrado\n";
+        system("pause");
+        return;
+    }
+    
+    ofstream arch_txt("reportes.txt", ios::app);
+    if(!arch_txt){
+        cout << "ERROR: No se puede crear archivo reportes.txt\n";
+        system("pause");
+        archivo.close();
+        return;
+    }
     
     cout << "REPORTE ESTADISTICO\n";
     cout << "===================\n\n";
     
     arch_txt << "REPORTE ESTADISTICO\n";
     arch_txt << "===================\n";
-    
-    archivo.open("robots.bin", ios::in | ios::binary);
-    if(!archivo){
-        cout << "No hay datos\n";
-        system("pause");
-        return;
-    }
     
     while(archivo.read((char *)&rob, sizeof(rob))){
         if(rob.id != 0 && rob.estatus == 1){
