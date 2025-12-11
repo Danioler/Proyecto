@@ -800,28 +800,28 @@ void registrarSenal(senal &sen){
     // Determinar estado basado en tipo y valor
     switch(sen.tipo_senal){
         case 1: // Voltaje
-            if(sen.valor < rob.voltaje_nominal * 0.8){
+            if(sen.valor < rob.voltaje_nominal * 0.8){ //tolerancia 20% BAJO
                 sen.estado = 2;
                 cout << "ADVERTENCIA: Voltaje bajo\n";
-            } else if(sen.valor > rob.voltaje_nominal * 1.2){
+            } else if(sen.valor > rob.voltaje_nominal * 1.2){  //tolerancia 20% ALTO        
                 sen.estado = 2;
                 cout << "ADVERTENCIA: Voltaje alto\n";
             }
             break;
         case 2: // Temperatura
-            if(sen.valor > rob.temperatura_max){
+            if(sen.valor > rob.temperatura_max){ // Sobre temperatura
                 sen.estado = 2;
                 cout << "ALERTA: Temperatura excedida\n";
             }
             break;
         case 3: // Velocidad
-            if(sen.valor > rob.velocidad_max){
+            if(sen.valor > rob.velocidad_max){ // Sobre velocidad
                 sen.estado = 2;
                 cout << "ALERTA: Velocidad excedida\n";
             }
             break;
         case 4: // Bateria
-            if(sen.valor < 20){
+            if(sen.valor < 20){ // Bateria baja
                 sen.estado = 2;
                 cout << "ALERTA: Bateria baja\n";
             }
